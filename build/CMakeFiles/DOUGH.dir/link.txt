@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/DOUGH.dir/src/main.cpp.o CMakeFiles/DOUGH.dir/src/Game/game.cpp.o CMakeFiles/DOUGH.dir/src/Scene/Scene.cpp.o -o DOUGH  -lSDL2 -lSDL2_image -lSDL2main 
