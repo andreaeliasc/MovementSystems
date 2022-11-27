@@ -4,6 +4,10 @@
 
 #include "../entt/entt.hpp"
 #include "../Scene/Scene.h"
+#include <SDL2/SDL.h>
+
+#include <SDL2/SDL.h>
+
 
 #include "../Scene/Entities.hpp"
 #include "../Scene/Components.hpp"
@@ -12,6 +16,8 @@
 int speed = 2;
 int player_speed = 80;
 int shadow = 30;
+SDL_Rect coin;
+SDL_Rect ant;
 
 Game::Game ()
 {
@@ -86,6 +92,16 @@ Uint32 spriteBackground(Uint32 currentColor, float dT)
 }
 Scene* scene;
 void Game::setup(){
+    
+    coin.x = window_width/2;
+    coin.y = 700;
+    coin.w = 48;
+    coin.h = 48;
+
+    ant.x = 800;
+    ant.y = 300;
+    ant.w = 64;
+    ant.h = 64;
 
     scene = new Scene("Dough's Adventure");
 
@@ -107,8 +123,7 @@ void Game::setup(){
     scene->addRenderSystem(new SpriteRenderSystem());
 
     scene->addUpdateSystem(new MovementUpdateSystem());
-    scene->addUpdateSystem(new CameraFollowUpdateSystem());
-
+    
     scene->setup();
     
 }
@@ -156,10 +171,56 @@ void Game::handleEvents(){
         if(event.type == SDL_QUIT){
             isRunning = false;
         }
-
+        if (event.type == SDL_KEYDOWN)
+    {
+      switch (event.key.keysym.sym)
+      {
+      case SDLK_RIGHT:
+        coin.w += 30;
+       if (coin.w>30)
+       {
+        coin.w = coin.w/5;
+       }else{
+        coin.w = coin.w*5;
+       }
+        
+        
+        break;
+      case SDLK_LEFT:
+       if (coin.w>30)
+       {
+        coin.w = coin.w/5;
+       }else{
+        coin.w = coin.w*5;
+       } 
+        break;
+      
+      case SDLK_UP:
+        if (coin.w>30)
+       {
+        coin.w = coin.w/5;
+       }else{
+        coin.w = coin.w*5;
+       }
+        break;
+    
+        case SDLK_DOWN:
+        if (coin.w>30)
+       {
+        coin.w = coin.w/5;
+       }else{
+        coin.w = coin.w*5;
+       }  
+          
+        break;
+    
+        
+      }
+    }
         scene->input(event);
 
     }
+    
 
 }
 
@@ -167,14 +228,37 @@ void Game::handleEvents(){
 void Game::update(){
 
     scene->update(dT);  
-
+    if (coin.x < 600)
+    {
+        coin.x +=2000;
+    }
+    
 }
 void Game::render(){
 
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 1);
     SDL_RenderClear(renderer);
   
+    
+
+    SDL_Surface* coinS = IMG_Load("./assets/coin.png");
+    SDL_Texture* coinT = SDL_CreateTextureFromSurface(renderer, coinS);
+    SDL_FreeSurface(coinS);
+
+    
+    SDL_Surface* antS = IMG_Load("./assets/ant.png");
+    SDL_Texture* antT = SDL_CreateTextureFromSurface(renderer, antS);
+    SDL_FreeSurface(antS);
+
+
     scene->render(renderer);
+    
+   // SDL_RenderCopy(renderer, coinT, nullptr , &coin);
+    SDL_DestroyTexture(coinT);
+
+    SDL_RenderCopy(renderer, antT, nullptr , &ant);
+    SDL_DestroyTexture(antT);
+
 
     SDL_RenderPresent(renderer);
 
